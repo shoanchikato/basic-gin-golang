@@ -51,7 +51,7 @@ func (p *peopleRoute) GetAll() func(c *gin.Context) {
 // GetOne
 func (p *peopleRoute) GetOne() func(c *gin.Context) {
 	return func(c *gin.Context) {
-		id, err := GetIDParam(c.Param("id"))
+		id, err := getIDParam(c.Param("id"))
 		if err != nil {
 			c.String(http.StatusBadRequest, err.Error())
 			return
@@ -73,7 +73,7 @@ func (p *peopleRoute) Update() func(c *gin.Context) {
 			return
 		}
 
-		id, err := GetIDParam(c.Param("id"))
+		id, err := getIDParam(c.Param("id"))
 		if err != nil {
 			c.String(http.StatusBadRequest, err.Error())
 			return
