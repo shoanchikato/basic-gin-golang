@@ -54,6 +54,7 @@ func (p *peopleRoute) GetOne() func(c *gin.Context) {
 		id, err := GetIDParam(c.Param("id"))
 		if err != nil {
 			c.String(http.StatusBadRequest, err.Error())
+			return
 		}
 
 		person := p.repo.GetOne(uint(id))
@@ -75,6 +76,7 @@ func (p *peopleRoute) Update() func(c *gin.Context) {
 		id, err := GetIDParam(c.Param("id"))
 		if err != nil {
 			c.String(http.StatusBadRequest, err.Error())
+			return
 		}
 		
 		p.repo.Update(id, &person)
