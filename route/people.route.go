@@ -6,7 +6,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
 )
 
 type PeopleRoute interface {
@@ -36,7 +35,7 @@ func (p *peopleRoute) Create() func(c *gin.Context) {
 
 		p.repo.Create(&person)
 
-		c.JSON(201, person)
+		c.JSON(http.StatusCreated, person)
 	}
 }
 
@@ -45,23 +44,21 @@ func (p *peopleRoute) GetAll() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		people := p.repo.GetAll()
 
-		c.JSON(200, people)
+		c.JSON(http.StatusOK, people)
 	}
 }
 
 // GetOne
 func (p *peopleRoute) GetOne() func(c *gin.Context) {
 	return func(c *gin.Context) {
-		idString := c.Param("id")
-
-		id, err := strconv.Atoi(idString)
+		id, err := GetIDParam(c.Param("id"))
 		if err != nil {
-			c.String(400, "bad id value, can't be parsed to an interger")
+			c.String(http.StatusBadRequest, err.Error())
 		}
 
 		person := p.repo.GetOne(uint(id))
 
-		c.JSON(200, person)
+		c.JSON(http.StatusOK, person)
 	}
 }
 
@@ -75,16 +72,13 @@ func (p *peopleRoute) Update() func(c *gin.Context) {
 			return
 		}
 
-		idString := c.Param("id")
-
-		idInt, err := strconv.Atoi(idString)
+		id, err := GetIDParam(c.Param("id"))
 		if err != nil {
-			c.String(400, "bad id value, can't be parsed to an interger")
+			c.String(http.StatusBadRequest, err.Error())
 		}
-
-		id := uint(idInt)
+		
 		p.repo.Update(id, &person)
 
-		c.JSON(200, person)
+		c.JSON(http.StatusOK, person)
 	}
 }
